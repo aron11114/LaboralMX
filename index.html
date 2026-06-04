@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaboralMX | Calculadoras de Derechos Laborales</title>
+    <!-- Bootstrap 5 CDN para diseño rápido -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        body { background-color: #f8f9fa; }
+        .hero-section {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            color: white;
+            padding: 4rem 0 3rem 0;
+            border-radius: 0 0 20px 20px;
+        }
+        .calc-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            height: 100%;
+        }
+        .calc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="bi bi-shield-check text-primary"></i> LaboralMX
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- MENÚ ALINEADO A LA IZQUIERDA USANDO me-auto -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Calculadoras</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="leyes.html">Leyes Explicadas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sección Hero -->
+    <header class="hero-section text-center shadow">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Tus derechos laborales, sin enredos</h1>
+            <p class="lead mt-3">Calcula exactamente cuánto te corresponde por ley de forma transparente, rápida y gratuita.</p>
+            
+            <!-- Banner de Confianza y Actualización -->
+            <div class="mt-4">
+                <span class="badge bg-light text-dark border p-2 mb-3 shadow-sm fs-6">
+                    <i class="bi bi-clock-history text-primary"></i> Actualizado conforme a la legislación mexicana vigente en 2026.
+                </span>
+                <div class="d-flex justify-content-center gap-4 flex-wrap text-white mt-2 small">
+                    <span><i class="bi bi-shield-check text-info"></i> Basado en la LFT</span>
+                    <span><i class="bi bi-graph-up text-info"></i> Cálculos matemáticos exactos</span>
+                    <span><i class="bi bi-balance-scale text-info"></i> No sustituye asesoría legal profesional</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <main class="container my-5">
+        <h2 class="text-center mb-5 fw-bold text-secondary">¿Qué necesitas calcular hoy?</h2>
+        
+        <!-- Grid de Calculadoras Exactas (6 Tarjetas) -->
+        <div class="row g-4 justify-content-center">
+            
+            <!-- Tarjeta: Finiquito -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card calc-card p-3 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-door-open card-icon text-primary"></i>
+                        <h4 class="card-title fw-bold">Finiquito</h4>
+                        <p class="card-text text-muted">Para renuncias voluntarias o términos de contrato. Descubre lo que acumulaste de tus prestaciones.</p>
+                        <a href="finiquito.html" class="btn btn-outline-primary w-100 mt-2">Calcular Finiquito</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Liquidación -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card calc-card p-3 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-exclamation-triangle card-icon text-danger"></i>
+                        <h4 class="card-title fw-bold">Liquidación</h4>
+                        <p class="card-text text-muted">¿Despido injustificado? Conoce tu indemnización obligatoria de 3 meses y tu prima de antigüedad.</p>
+                        <a href="liquidacion.html" class="btn btn-outline-danger w-100 mt-2">Calcular Liquidación</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Aguinaldo -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card calc-card p-3 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-check card-icon text-primary"></i>
+                        <h4 class="card-title fw-bold">Aguinaldo</h4>
+                        <p class="card-text text-muted">Descubre cuánto te corresponde de esta prestación anual obligatoria antes del 20 de diciembre.</p>
+                        <a href="aguinaldo.html" class="btn btn-outline-primary w-100 mt-2">Calcular Aguinaldo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Vacaciones y Prima (.htm) -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card calc-card p-3 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-sun card-icon text-warning"></i>
+                        <h4 class="card-title fw-bold">Vacaciones y Prima</h4>
+                        <p class="card-text text-muted">Calcula tus días de descanso según la ley de Vacaciones Dignas y tu 25% de prima vacacional.</p>
+                        <a href="vacaciones.htm" class="btn btn-outline-warning w-100 mt-2 text-dark">Calcular Vacaciones</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Horas Extra -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card calc-card p-3 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-clock-history card-icon text-primary"></i>
+                        <h4 class="card-title fw-bold">Horas Extra</h4>
+                        <p class="card-text text-muted">Calcula el pago de tus horas laboradas adicionales en la semana (dobles y triples).</p>
+                        <a href="horas_extra.html" class="btn btn-outline-primary w-100 mt-2">Calcular Horas Extra</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta: SDI (ENLACE CORREGIDO Y VINCULADO) -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card calc-card p-3 text-center">
+                    <div class="card-body">
+                        <i class="bi bi-calculator card-icon text-info"></i>
+                        <h4 class="card-title fw-bold">Salario Diario Integrado</h4>
+                        <p class="card-text text-muted">La unidad clave que utiliza el IMSS y los tribunales para fijar el valor real de tu día de trabajo.</p>
+                        <a href="sdi.html" class="btn btn-outline-info w-100 mt-2">Calcular SDI</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Sección FAQ para SEO y Guía -->
+        <div class="mt-5 pt-5 border-top">
+            <h3 class="fw-bold mb-4 text-secondary text-center">Preguntas Frecuentes Laborales</h3>
+            <div class="accordion shadow-sm" id="faqLaboral">
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            ¿Me toca liquidación si renuncio voluntariamente?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqLaboral">
+                        <div class="accordion-body">
+                            <strong>No.</strong> La liquidación por ley (que incluye los 3 meses de sueldo constitucional) aplica primordialmente si eres víctima de un despido injustificado. Si tu decisión es renunciar por voluntad propia, por ley solo te corresponde reclamar tu <strong>Finiquito</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                            ¿Cuánto tiempo tiene la empresa para pagar un finiquito?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqLaboral">
+                        <div class="accordion-body">
+                            Aunque la Ley Federal del Trabajo no define una cantidad estricta de días naturales, los criterios legales dictan que debe entregarse en un <strong>tiempo inmediato y razonable</strong> tras la separación laboral (comúnmente se efectúa durante la siguiente fecha calendarizada de nómina o en un periodo máximo de 3 a 5 días hábiles).
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="bg-dark text-white text-center py-4 mt-auto">
+        <div class="container">
+            <p class="mb-0">© 2026 LaboralMX. Herramienta informativa basada en la Ley Federal del Trabajo mexicana.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Liquidación por Despido | LaboralMX</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="bi bi-shield-check text-primary"></i> LaboralMX
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Calculadoras</a></li>
+                    <li class="nav-item"><a class="nav-link" href="leyes.html">Leyes Explicadas</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-danger text-white text-center py-3">
+                        <h3 class="mb-0 fw-bold">Calculadora de Liquidación por Despido</h3>
+                        <small>Indemnización correspondiente por Despido Injustificado</small>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <form id="formLiquidacion">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Sueldo Mensual Neto (Libre)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="sueldo" placeholder="Ej. 14000" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Fecha de Ingreso</label>
+                                    <input type="date" class="form-control" id="fechaIngreso" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Fecha de Despido</label>
+                                    <input type="date" class="form-control" id="fechaSalida" required>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-danger w-100 fw-bold fs-5 shadow-sm" onclick="calcularLiquidacion()">
+                                Calcular Liquidación de Ley
+                            </button>
+                        </form>
+
+                        <!-- Panel de Resultados -->
+                        <div id="resultado" class="mt-4 d-none">
+                            <div class="alert alert-danger border-danger text-dark p-4 bg-white">
+                                <h4 class="fw-bold mb-3 border-bottom pb-2 text-center text-danger">Estimación de Tu Indemnización</h4>
+                                
+                                <h6 class="fw-bold text-secondary text-uppercase mt-3">1. Prestaciones Pendientes (Finiquito)</h6>
+                                <div class="d-flex justify-content-between mb-2 ms-2">
+                                    <span>Aguinaldo Proporcional:</span>
+                                    <strong id="resAguinaldo">$0.00</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 ms-2">
+                                    <span>Vacaciones + Prima Vacacional Proporcional:</span>
+                                    <strong id="resVacaciones">$0.00</strong>
+                                </div>
+
+                                <h6 class="fw-bold text-secondary text-uppercase mt-4">2. Indemnizaciones por Despido</h6>
+                                <div class="d-flex justify-content-between mb-2 ms-2">
+                                    <span>3 Meses de Sueldo Constitucional (con SDI):</span>
+                                    <strong id="resTresMeses" class="text-danger">$0.00</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 ms-2">
+                                    <span>Prima de Antigüedad (12 días por año trabajado):</span>
+                                    <strong id="resPrimaAntiguedad">$0.00</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 ms-2 border-bottom pb-3">
+                                    <span>Antigüedad Calculada:</span>
+                                    <strong id="resAntiguedadTexto">0 años</strong>
+                                </div>
+                                
+                                <div class="text-center mt-4 p-3 bg-light rounded border">
+                                    <span class="text-muted small d-block text-uppercase fw-bold">Gran Total Neto Recomendable ante Conciliación:</span>
+                                    <h1 class="fw-bold text-danger display-5 my-2" id="resTotalLiquidacion">$0.00</h1>
+                                    <small class="text-muted d-block card-text">Esta cifra representa tu derecho según la Ley Federal del Trabajo. Recuerda que ante una junta de conciliación se puede negociar partiendo de esta base.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calcularLiquidacion() {
+            let sueldo = parseFloat(document.getElementById('sueldo').value);
+            let fIngreso = new Date(document.getElementById('fechaIngreso').value);
+            let fSalida = new Date(document.getElementById('fechaSalida').value);
+
+            if (isNaN(sueldo) || isNaN(fIngreso.getTime()) || isNaN(fSalida.getTime()) || fSalida < fIngreso) {
+                alert("Por favor, introduce tu sueldo y un rango de fechas válido.");
+                return;
+            }
+
+            // --- VARIABLES DE BASE DE CÁLCULO ---
+            let salarioDiarioBase = sueldo / 30;
+            
+            // Cálculo exacto del tiempo laborado
+            let milisegundosTotales = fSalida.getTime() - fIngreso.getTime();
+            let diasTotalesTrabajados = Math.floor(milisegundosTotales / (1000 * 60 * 60 * 24)) + 1;
+            let aniosAntiguedadExacta = diasTotalesTrabajados / 365;
+
+            // Factor de Integración para el SDI (Aproximado ley base: 1.0452 primer año)
+            let factorAprox = 1.0452;
+            if(aniosAntiguedadExacta > 1 && aniosAntiguedadExacta <= 2) factorAprox = 1.0466;
+            if(aniosAntiguedadExacta > 2 && aniosAntiguedadExacta <= 3) factorAprox = 1.0479;
+            if(aniosAntiguedadExacta > 3) factorAprox = 1.0493;
+
+            let sdi = salarioDiarioBase * factorAprox;
+
+            // --- 1. PARTE PROPORCIONAL (FINIQUITO) ---
+            // Aguinaldo proporcional del año actual
+            let inicioAnio = new Date(fSalida.getFullYear(), 0, 1);
+            let fechaInicioAguinaldo = fIngreso > inicioAnio ? fIngreso : inicioAnio;
+            let diasAguinaldo = Math.floor((fSalida.getTime() - fechaInicioAguinaldo.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+            let aguinaldoProp = (salarioDiarioBase * 15 / 365) * diasAguinaldo;
+
+            // Vacaciones proporcionales base del año en curso
+            let diasVacacionesDerecho = 12; 
+            if(aniosAntiguedadExacta > 1) diasVacacionesDerecho = 14;
+            if(aniosAntiguedadExacta > 2) diasVacacionesDerecho = 16;
+            let vacacionesProp = (salarioDiarioBase * diasVacacionesDerecho / 365) * (diasAguinaldo % 365);
+            let primaVacacionalProp = vacacionesProp * 0.25;
+            let totalFiniquitoPart = aguinaldoProp + vacacionesProp + primaVacacionalProp;
+
+            // --- 2. INDEMNIZACIONES POR LEY ---
+            // Tres meses de salario constitucional (Usando SDI)
+            let tresMesesSueldo = sdi * 90;
+
+            // Prima de Antigüedad: 12 días de salario por cada año (Con Tope de 2 salarios mínimos de 2026 en zona general aprox $497.72 diarios)
+            let salarioMinimo2026 = 248.86; 
+            let topePrimaAntiguedad = salarioMinimo2026 * 2;
+            let salarioParaPrima = salarioDiarioBase > topePrimaAntiguedad ? topePrimaAntiguedad : salarioDiarioBase;
+            let primaAntiguedadTotal = (salarioParaPrima * 12) * aniosAntiguedadExacta;
+
+            // --- SUMA FINAL DE LA LIQUIDACIÓN ---
+            let granTotalLiquidacion = totalFiniquitoPart + tresMesesSueldo + primaAntiguedadTotal;
+
+            // --- RENDERIZADO EN PANTALLA ---
+            document.getElementById('resAguinaldo').innerText = "$" + aguinaldoProp.toLocaleString('es-MX', {maximumFractionDigits:2});
+            document.getElementById('resVacaciones').innerText = "$" + (vacacionesProp + primaVacacionalProp).toLocaleString('es-MX', {maximumFractionDigits:2});
+            document.getElementById('resTresMeses').innerText = "$" + tresMesesSueldo.toLocaleString('es-MX', {maximumFractionDigits:2});
+            document.getElementById('resPrimaAntiguedad').innerText = "$" + primaAntiguedadTotal.toLocaleString('es-MX', {maximumFractionDigits:2});
+            
+            document.getElementById('resAntiguedadTexto').innerText = aniosAntiguedadExacta.toFixed(1) + " años laborados";
+            document.getElementById('resTotalLiquidacion').innerText = "$" + granTotalLiquidacion.toLocaleString('es-MX', {maximumFractionDigits:2});
+
+            document.getElementById('resultado').classList.remove('d-none');
+        }
+    </script>
+</body>
+</html>

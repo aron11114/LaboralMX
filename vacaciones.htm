@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Vacaciones Dignas | LaboralMX</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="bi bi-shield-check text-primary"></i> LaboralMX
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Calculadoras</a></li>
+                    <li class="nav-item"><a class="nav-link" href="leyes.html">Leyes Explicadas</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-warning text-dark text-center py-3">
+                        <h3 class="mb-0 fw-bold">Calculadora de Vacaciones y Prima</h3>
+                        <small>Actualizado con la Ley de Vacaciones Dignas</small>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <form id="formVacaciones">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Sueldo Mensual Neto (Libre)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="sueldo" placeholder="Ej. 10000" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">¿Cuántos años cumples (o cumpliste) en la empresa?</label>
+                                <input type="number" class="form-control" id="anios" placeholder="Ej. 1" min="1" required>
+                            </div>
+
+                            <button type="button" class="btn btn-dark w-100 fw-bold fs-5 text-warning" onclick="calcularVacaciones()">
+                                Calcular Días y Prima Vacacional
+                            </button>
+                        </form>
+
+                        <!-- Resultados -->
+                        <div id="resultado" class="mt-4 d-none">
+                            <div class="alert alert-warning border-warning text-dark bg-white">
+                                <h5 class="text-center fw-bold mb-3 text-dark">Tus Beneficios de Ley:</h5>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Días de vacaciones obligatorios:</span>
+                                    <strong id="resDias" class="text-primary fs-5">12 días</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Pago por tus días de descanso:</span>
+                                    <strong id="resPagoVacaciones">$0.00</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Prima Vacacional Extra (25%):</span>
+                                    <strong id="resPrima" class="text-success fs-5">$0.00</strong>
+                                </div>
+                                <hr>
+                                <div class="bg-light p-3 rounded text-center border">
+                                    <span class="text-muted small d-block">Monto extra que debes recibir al tomar tus vacaciones:</span>
+                                    <h3 class="fw-bold text-success mb-0" id="resTotalPrima">$0.00</h3>
+                                    <small class="text-muted d-block mt-1">(Equivalente a tu Prima Vacacional)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calcularVacaciones() {
+            let sueldo = parseFloat(document.getElementById('sueldo').value);
+            let anios = parseInt(document.getElementById('anios').value);
+
+            if (isNaN(sueldo) || isNaN(anios) || anios < 1) {
+                alert("Por favor, ingresa datos válidos.");
+                return;
+            }
+
+            // 1. Tabla de la reforma de Vacaciones Dignas
+            let diasVacaciones = 12;
+            if (anios == 1) diasVacaciones = 12;
+            else if (anios == 2) diasVacaciones = 14;
+            else if (anios == 3) diasVacaciones = 16;
+            else if (anios == 4) diasVacaciones = 18;
+            else if (anios == 5) diasVacaciones = 20;
+            else if (anios >= 6 && anios <= 10) diasVacaciones = 22;
+            else if (anios >= 11 && anios <= 15) diasVacaciones = 24;
+            else if (anios >= 16 && anios <= 20) diasVacaciones = 26;
+            else if (anios >= 21 && anios <= 25) diasVacaciones = 28;
+            else diasVacaciones = 30;
+
+            // 2. Cálculos económicos
+            let salarioDiario = sueldo / 30;
+            let pagoVacacionesTotales = salarioDiario * diasVacaciones;
+            let primaVacacional = pagoVacacionesTotales * 0.25;
+
+            // 3. Mostrar resultados en la interfaz
+            document.getElementById('resDias').innerText = diasVacaciones + " días";
+            document.getElementById('resPagoVacaciones').innerText = "$" + pagoVacacionesTotales.toLocaleString('es-MX', {maximumFractionDigits:2});
+            document.getElementById('resPrima').innerText = "$" + primaVacacional.toLocaleString('es-MX', {maximumFractionDigits:2});
+            document.getElementById('resTotalPrima').innerText = "$" + primaVacacional.toLocaleString('es-MX', {maximumFractionDigits:2});
+
+            document.getElementById('resultado').classList.remove('d-none');
+        }
+    </script>
+</body>
+</html>

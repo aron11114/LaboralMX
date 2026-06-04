@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de SDI | LaboralMX</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="bi bi-shield-check text-primary"></i> LaboralMX
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Calculadoras</a></li>
+                    <li class="nav-item"><a class="nav-link" href="leyes.html">Leyes Explicadas</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-info text-white text-center py-3">
+                        <h3 class="mb-0 fw-bold">Salario Diario Integrado (SDI)</h3>
+                        <small>Tu sueldo real sumando prestaciones de ley</small>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <form id="formSDI">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Sueldo Mensual Neto</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="sueldoMensual" placeholder="Ej. 15000" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Años trabajando en la empresa</label>
+                                <input type="number" class="form-control" id="antiguedad" placeholder="Ej. 1" min="1" required>
+                            </div>
+
+                            <button type="button" class="btn btn-dark w-100 fw-bold text-info" onclick="calcularSDI()">
+                                Calcular mi SDI
+                            </button>
+                        </form>
+
+                        <!-- Resultados -->
+                        <div id="resultado" class="mt-4 d-none">
+                            <div class="alert alert-info border-info text-dark bg-white p-4">
+                                <h5 class="text-center fw-bold mb-3 text-info">Resultado del Cálculo</h5>
+                                
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Salario Diario Base (Sueldo / 30):</span>
+                                    <strong id="resDiarioBase">$0.00</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Días de Vacaciones por Antigüedad:</span>
+                                    <strong id="resDiasVacaciones">12 días</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Factor de Integración:</span>
+                                    <strong id="resFactor">1.0452</strong>
+                                </div>
+                                <hr>
+                                <div class="text-center bg-light p-3 rounded border">
+                                    <span class="text-muted small d-block">Tu Salario Diario Integrado (SDI):</span>
+                                    <h2 class="fw-bold text-info my-2" id="resSDIFinal">$0.00</h2>
+                                    <small class="text-muted d-block">Este salario es el que usa el IMSS para tus incapacidades, tu Infonavit y las demandas de liquidación.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calcularSDI() {
+            let sueldoMensual = parseFloat(document.getElementById('sueldoMensual').value);
+            let anios = parseInt(document.getElementById('antiguedad').value);
+
+            if (isNaN(sueldoMensual) || isNaN(anios) || anios < 1) {
+                alert("Por favor, ingresa valores válidos.");
+                return;
+            }
+
+            // 1. Salario Diario Normal
+            let salarioDiarioBase = sueldoMensual / 30;
+
+            // 2. Determinar días de vacaciones por la Ley de Vacaciones Dignas
+            let diasVacaciones = 12;
+            if (anios == 1) diasVacaciones = 12;
+            else if (anios == 2) diasVacaciones = 14;
+            else if (anios == 3) diasVacaciones = 16;
+            else if (anios == 4) diasVacaciones = 18;
+            else if (anios == 5) diasVacaciones = 20;
+            else if (anios >= 6 && anios <= 10) diasVacaciones = 22;
+            else if (anios >= 11 && anios <= 15) diasVacaciones = 24;
+            else if (anios >= 16 && anios <= 20) diasVacaciones = 26;
+            else if (anios >= 21 && anios <= 25) diasVacaciones = 28;
+            else diasVacaciones = 30;
+
+            // 3. Calcular Factor de Integración (Fórmula Legal de Prestaciones Mínimas)
+            // Factor = 1 + (Días de Aguinaldo / 365) + ((Días de Vacaciones * 25% de Prima) / 365)
+            let aguinaldoDias = 15;
+            let primaPorcentaje = 0.25;
+            
+            let parteAguinaldo = aguinaldoDias / 365;
+            let partePrimaVacacional = (diasVacaciones * primaPorcentaje) / 365;
+            let factorIntegracion = 1 + parteAguinaldo + partePrimaVacacional;
+
+            // 4. Calcular el SDI Final
+            let sdi = salarioDiarioBase * factorIntegracion;
+
+            // 5. Inyectar datos en la interfaz
+            document.getElementById('resDiarioBase').innerText = "$" + salarioDiarioBase.toLocaleString('es-MX', {maximumFractionDigits:2});
+            document.getElementById('resDiasVacaciones').innerText = diasVacaciones + " días";
+            document.getElementById('resFactor').innerText = factorIntegracion.toFixed(4);
+            document.getElementById('resSDIFinal').innerText = "$" + sdi.toLocaleString('es-MX', {maximumFractionDigits:2});
+
+            // Mostrar el cuadro de resultados
+            document.getElementById('resultado').classList.remove('d-none');
+        }
+    </script>
+</body>
+</html>

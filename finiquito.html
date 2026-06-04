@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Finiquito | LaboralMX</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="bi bi-shield-check text-primary"></i> LaboralMX
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Calculadoras</a></li>
+                    <li class="nav-item"><a class="nav-link" href="leyes.html">Leyes Explicadas</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h3 class="mb-0 fw-bold">Calculadora de Finiquito</h3>
+                        <small>Aplica para renuncia voluntaria o término de contrato</small>
+                    </div>
+                    <div class="card-body p-4">
+                        
+                        <form id="formFiniquito">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Sueldo Mensual Neto (Libre)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="sueldo" placeholder="Ej. 12000" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Fecha de Ingreso</label>
+                                    <input type="date" class="form-control" id="fechaIngreso" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Fecha de Salida / Renuncia</label>
+                                    <input type="date" class="form-control" id="fechaSalida" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Días de vacaciones pendientes (del año anterior o acumulados)</label>
+                                <input type="number" class="form-control" id="vacacionesPendientes" value="0" min="0">
+                                <small class="text-muted">Si no te deben días de años pasados, déjalo en 0.</small>
+                            </div>
+
+                            <button type="button" class="btn btn-success w-100 fw-bold fs-5" onclick="calcularFiniquito()">
+                                Calcular mi Finiquito Proporcional
+                            </button>
+                        </form>
+
+                        <div id="resultado" class="mt-4 d-none">
+                            <div class="alert alert-success border-success text-dark p-4">
+                                <h5 class="fw-bold mb-3 border-bottom pb-2 text-center text-primary">Desglose Estimado de Tu Finiquito</h5>
+                                
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Días transcurridos en el año actual:</span>
+                                    <strong id="resDiasAnio">0 días</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Aguinaldo Proporcional:</span>
+                                    <strong id="resAguinaldo">$0.00</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Vacaciones Proporcionales (año en curso):</span>
+                                    <strong id="resVacaciones">$0.00</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Prima Vacacional Proporcional (25%):</span>
+                                    <strong id="resPrima">$0.00</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 border-bottom pb-2" id="divPendientes">
+                                    <span>Vacaciones no gozadas acumuladas:</span>
+                                    <strong id="resVacacionesPendientes">$0.00</strong>
+                                </div>
+                                
+                                <div class="text-center mt-3">
+                                    <span class="text-muted small d-block">Monto Total Neto Aproximado:</span>
+                                    <h2 class="fw-bold text-success display-6" id="resTotalFiniquito">$0.00</h2>
+                                    <small class="text-muted d-block mt-2">Nota: Este cálculo es informativo y no incluye retenciones extra de impuestos (ISR) o adeudos de créditos (Infonavit/Fonacit).</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function obtenerDiasVacaciones(antiguedadAnios) {
+            if (antiguedadAnios < 1) return 12; // Base de ley proporcional
+            if (antiguedadAnios == 1) return 12;
+            if (antiguedadAnios == 2) return 14;
+            if (antiguedadAnios == 3) return 16;
+            if (antiguedadAnios == 4) return 18;
+            if (antiguedadAnios == 5) return 20;
+            if (antiguedadAnios >= 6 && antiguedadAnios <= 10) return 22;
+            return 24;
+        }
+
+        function calcularFiniquito() {
+            let sueldo = parseFloat(document.getElementById('sueldo').value);
+            let fIngreso = new Date(document.getElementById('fechaIngreso').value);
+            let fSalida = new Date(document.getElementById('fechaSalida').value);
+            let vacPendientes = parseFloat(document.getElementById('vacacionesPendientes').value) || 0;
+
+            if (isNaN(sueldo) || isNaN(fIngreso.getTime()) || isNaN(fSalida.getTime()) || fSalida < fIngreso) {
+                alert("Por favor, ingresa un sueldo válido y fechas coherentes.");
+                return;
+            }
+
+            let salarioDiario = sueldo / 30;
+
+            // 1. Días trabajados en el año en curso para el Aguinaldo (desde el 1 de enero)
+            let inicioAnioActual = new Date(fSalida.getFullYear(), 0, 1);
+            let fechaInicioCalculoAguinaldo = fIngreso > inicioAnioActual ? fIngreso : inicioAnioActual;
+            let difTiempoAguinaldo = fSalida.getTime() - fechaInicioCalculoAguinaldo.getTime();
+            let diasAnioActual = Math.floor(difTiempoAguinaldo / (1000 * 60 * 60 * 24)) + 1;
+
+            // Cálculo aguinaldo proporcional (15 días por año completo)
+            let aguinaldoProporcional = (salarioDiario * 15 / 365) * diasAnioActual;
+
+            // 2. Días acumulados desde su último aniversario para Vacaciones
+            let aniosAntiguedad = fSalida.getFullYear() - fIngreso.getFullYear();
+            let ultimoAniversario = new Date(fIngreso.getTime());
+            ultimoAniversario.setFullYear(fSalida.getFullYear());
+            
+            // Ajuste por si el aniversario aún no pasa en el año de salida
+            if (ultimoAniversario > fSalida) {
+                ultimoAniversario.setFullYear(fSalida.getFullYear() - 1);
+                aniosAntiguedad--;
+            }
+            if(aniosAntiguedad < 0) aniosAntiguedad = 0;
+
+            let difTiempoVacaciones = fSalida.getTime() - ultimoAniversario.getTime();
+            let diasDesdeAniversario = Math.floor(difTiempoVacaciones / (1000 * 60 * 60 * 24)) + 1;
+
+            // Días de vacaciones que le corresponden por su año de antigüedad actual
+            let diasVacacionesLey = obtenerDiasVacaciones(aniosAntiguedad + 1);
+            
+            // Cálculo vacaciones proporcionales y su prima del 25%
+            let vacacionesProporcionales = (salarioDiario * diasVacacionesLey / 365) * diasDesdeAniversario;
+            let primaVacacional = vacacionesProporcionales * 0.25;
+
+            // 3. Vacaciones pasadas que le debían completas
+            let pagoVacacionesPendientes = vacPendientes * salarioDiario;
+
+            // Suma total del finiquito
+            let totalFiniquito = aguinaldoProporcional + vacacionesProporcionales + primaVacacional + pagoVacacionesPendientes;
+
+            // Inyectar en interfaz
+            document.getElementById('resDiasAnio').innerText = diasAnioActual + " días";
+            document.getElementById('resAguinaldo').innerText = "$" + aguinaldoProporcional.toLocaleString('es-MX', {maximumFractionDigits:2});
+            document.getElementById('resVacaciones').innerText = "$" + vacacionesProporcionales.toLocaleString('es-MX', {maximumFractionDigits:2});
+            document.getElementById('resPrima').innerText = "$" + primaVacacional.toLocaleString('es-MX', {maximumFractionDigits:2});
+            document.getElementById('resVacacionesPendientes').innerText = "$" + pagoVacacionesPendientes.toLocaleString('es-MX', {maximumFractionDigits:2});
+            document.getElementById('resTotalFiniquito').innerText = "$" + totalFiniquito.toLocaleString('es-MX', {maximumFractionDigits:2});
+
+            document.getElementById('resultado').classList.remove('d-none');
+        }
+    </script>
+</body>
+</html>
